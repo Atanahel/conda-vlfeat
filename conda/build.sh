@@ -10,20 +10,17 @@ if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     VL_ARCH="glnx86"
   fi
   DYNAMIC_EXT="so"
-  DISABLE_OPENMP=0
 fi
 if [ "$(uname -s)" == "Darwin" ]; then
   VL_ARCH="maci64"
   DYNAMIC_EXT="dylib"
-  # OpenMP isn't supported on clang at this time
-  DISABLE_OPENMP=1
 fi
 
-export CFLAGS="-I$INCLUDE_PATH -DVL_DISABLE_OPENMP=$DISABLE_OPENMP"
+export CFLAGS="-I$INCLUDE_PATH"
 export LDFLAGS="-L$LIBRARY_PATH"
 
 # Turn off all optimisations. Use vlfeat_avx for a fast version
-make MEX="" NO_TESTS=yes ARCH=${VL_ARCH} DISABLE_OPENMP=$DISABLE_OPENMP -j${CPU_COUNT}
+make MEX="" NO_TESTS=yes ARCH=${VL_ARCH} -j${CPU_COUNT}
 
 # On OSX the resolution of the libvl.dylib doesn't seem to
 # work properly for the executables - but they are properly
